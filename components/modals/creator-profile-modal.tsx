@@ -75,7 +75,6 @@ export function CreatorProfileModal({
     });
   };
 
-  // Dynamic helper to render beautiful social network icons for live channels
   const getLinkIcon = (url: string) => {
     const lowercaseUrl = url.toLowerCase();
     if (
