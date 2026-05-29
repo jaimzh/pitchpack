@@ -9,8 +9,6 @@ interface StrategyTabProps {
   result: OutreachPackResponse;
   copiedKey: string | null;
   setCopiedKey: (key: string | null) => void;
-  isRegeneratingSnapshot?: boolean;
-  onRegenerateSnapshot?: () => void;
   darkMode: boolean;
 }
 
@@ -18,8 +16,6 @@ export function StrategyTab({
   result,
   copiedKey,
   setCopiedKey,
-  isRegeneratingSnapshot = false,
-  onRegenerateSnapshot,
   darkMode,
 }: StrategyTabProps) {
   const composerCardClass = `border rounded-2xl overflow-hidden transition-all ${
@@ -72,22 +68,6 @@ export function StrategyTab({
               </h3>
             </div>
 
-            <div className="flex items-center gap-3">
-              {onRegenerateSnapshot && (
-                <button
-                  onClick={onRegenerateSnapshot}
-                  disabled={isRegeneratingSnapshot}
-                  className="p-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-zinc-400 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all cursor-pointer disabled:opacity-50"
-                  title="Regenerate Snapshot"
-                >
-                  <RefreshCw
-                    className={`w-3.5 h-3.5 ${
-                      isRegeneratingSnapshot ? "animate-spin" : ""
-                    }`}
-                  />
-                </button>
-              )}
-            </div>
           </div>
 
           {/* Divider */}

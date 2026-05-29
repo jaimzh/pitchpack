@@ -16,12 +16,6 @@ interface PitchPackWorkspaceProps {
   isGenerating: boolean;
   error: string | null;
   onErrorClear: () => void;
-  isRegeneratingSection: string | null;
-  onRegenerateSection: (
-    section: "initial_email" | "follow_up_email" | "dm_version" | "no_budget_response"
-  ) => void;
-  isRegeneratingSnapshot?: boolean;
-  onRegenerateSnapshot?: () => void;
   darkMode: boolean;
 }
 
@@ -30,10 +24,6 @@ export function PitchPackWorkspace({
   isGenerating,
   error,
   onErrorClear,
-  isRegeneratingSection,
-  onRegenerateSection,
-  isRegeneratingSnapshot = false,
-  onRegenerateSnapshot,
   darkMode,
 }: PitchPackWorkspaceProps) {
   const [activeTab, setActiveTab] = useState<PitchPackTabType>("emails");
@@ -92,8 +82,6 @@ export function PitchPackWorkspace({
           setCopiedKey={setCopiedKey}
           selectedSubjectIdx={selectedSubjectIdx}
           setSelectedSubjectIdx={setSelectedSubjectIdx}
-          isRegeneratingSection={isRegeneratingSection}
-          onRegenerateSection={onRegenerateSection}
           darkMode={darkMode}
         />
       )}
@@ -103,8 +91,6 @@ export function PitchPackWorkspace({
           result={result}
           copiedKey={copiedKey}
           setCopiedKey={setCopiedKey}
-          isRegeneratingSection={isRegeneratingSection}
-          onRegenerateSection={onRegenerateSection}
           darkMode={darkMode}
         />
       )}
@@ -114,8 +100,6 @@ export function PitchPackWorkspace({
           result={result}
           copiedKey={copiedKey}
           setCopiedKey={setCopiedKey}
-          isRegeneratingSnapshot={isRegeneratingSnapshot}
-          onRegenerateSnapshot={onRegenerateSnapshot}
           darkMode={darkMode}
         />
       )}

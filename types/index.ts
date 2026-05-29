@@ -18,8 +18,7 @@ export interface CreatorProfile {
 export interface BrandInput {
   brand_name: string;
   website: string;
-  why_user_likes_brand: string;
-  user_idea: string;
+  creative_context: string;
 }
 
 export interface OutreachPackDetails {

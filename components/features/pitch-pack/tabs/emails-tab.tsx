@@ -10,10 +10,6 @@ interface EmailsTabProps {
   setCopiedKey: (key: string | null) => void;
   selectedSubjectIdx: number;
   setSelectedSubjectIdx: (idx: number) => void;
-  isRegeneratingSection: string | null;
-  onRegenerateSection: (
-    section: "initial_email" | "follow_up_email" | "dm_version" | "no_budget_response"
-  ) => void;
   darkMode: boolean;
 }
 
@@ -23,8 +19,6 @@ export function EmailsTab({
   setCopiedKey,
   selectedSubjectIdx,
   setSelectedSubjectIdx,
-  isRegeneratingSection,
-  onRegenerateSection,
   darkMode,
 }: EmailsTabProps) {
   const subjectsList = Array.from(
@@ -65,21 +59,6 @@ export function EmailsTab({
             </h3>
           </div>
 
-          <div className="flex items-center gap-3">
-            {/* Regenerate Section */}
-            <button
-              onClick={() => onRegenerateSection("initial_email")}
-              disabled={isRegeneratingSection === "initial_email"}
-              className="p-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-zinc-400 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all cursor-pointer disabled:opacity-50"
-              title="Regenerate Email"
-            >
-              <RefreshCw
-                className={`w-3.5 h-3.5 ${
-                  isRegeneratingSection === "initial_email" ? "animate-spin" : ""
-                }`}
-              />
-            </button>
-          </div>
         </div>
 
         {/* Divider */}
@@ -248,21 +227,6 @@ export function EmailsTab({
             </span>
           </div>
 
-          <div className="flex items-center gap-3">
-            {/* Regenerate Section */}
-            <button
-              onClick={() => onRegenerateSection("follow_up_email")}
-              disabled={isRegeneratingSection === "follow_up_email"}
-              className="p-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-zinc-400 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all cursor-pointer disabled:opacity-50"
-              title="Regenerate Follow-Up"
-            >
-              <RefreshCw
-                className={`w-3.5 h-3.5 ${
-                  isRegeneratingSection === "follow_up_email" ? "animate-spin" : ""
-                }`}
-              />
-            </button>
-          </div>
         </div>
 
         {/* Divider */}

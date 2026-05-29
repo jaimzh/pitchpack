@@ -1,6 +1,7 @@
 "use client";
 
-import { Sparkle, Sparkles, Target } from "lucide-react";
+import React from "react";
+import { Sparkles, Target } from "lucide-react";
 import { BrandInput } from "@/types";
 
 interface CampaignBriefProps {
@@ -10,6 +11,10 @@ interface CampaignBriefProps {
   darkMode: boolean;
   onSubmit: (e: React.FormEvent) => void;
 }
+
+const PLACEHOLDER_EXAMPLE = `I love Oatly's playful typography and chaotic campaign energy.
+Would love to create looping splash physics animations around oat milk cartons.
+Audience overlaps heavily with my TikTok motion design viewers.`;
 
 export function CampaignBrief({
   brand,
@@ -41,7 +46,7 @@ export function CampaignBrief({
       <div className="flex items-center gap-2 mb-4 pb-3 border-b border-dashed border-zinc-200 dark:border-zinc-900">
         <Target className="w-4 h-4 text-zinc-500 dark:text-zinc-400" />
         <h2 className="text-xs font-mono uppercase tracking-widest font-bold text-zinc-500">
-          Target Collaboration Settings
+          Target Brand
         </h2>
       </div>
 
@@ -79,57 +84,25 @@ export function CampaignBrief({
           </div>
         </div>
 
-        {/* Why this brand */}
+        {/* Notes / Creative Context — single unified textarea */}
         <div>
           <label className={labelClass}>
-            What brings you to this brand?{" "}
-            <span className="text-zinc-400 font-normal">
-              (Your authentic affinity connection)
-            </span>
+            Notes / Creative Context{" "}
+            <span className="font-normal text-zinc-400">(Optional)</span>
           </label>
           <textarea
-            rows={2}
-            value={brand.why_user_likes_brand}
+            rows={8}
+            value={brand.creative_context}
             onChange={(e) =>
-              setBrand({ ...brand, why_user_likes_brand: e.target.value })
+              setBrand({ ...brand, creative_context: e.target.value })
             }
-            placeholder="Why do you genuinely love their product, creative direction, or visual branding style?"
-            className={`w-full text-sm p-3 rounded-lg border outline-none resize-none transition-all ${
+            placeholder={PLACEHOLDER_EXAMPLE}
+            className={`w-full text-sm p-3 rounded-lg border outline-none resize-y transition-all leading-relaxed ${
               darkMode
-                ? "bg-[#111111] border-zinc-800 text-zinc-100 placeholder-zinc-700 focus:border-zinc-600"
+                ? "bg-[#111111] border-zinc-800 text-zinc-100 placeholder-zinc-600 focus:border-zinc-600"
                 : "bg-white border-zinc-200 text-zinc-900 placeholder-zinc-400 focus:border-zinc-400 shadow-xs"
             }`}
           />
-        </div>
-
-        {/* Speculative idea — Notion callout style */}
-        <div
-          className={`p-4 rounded-xl border flex gap-3 ${
-            darkMode
-              ? "bg-zinc-950 border-zinc-900"
-              : "bg-zinc-50/50 border-zinc-200"
-          }`}
-        >
-          <Sparkle className="w-4 h-4 text-zinc-400 mt-0.5 flex-shrink-0" />
-          <div className="flex-1">
-            <label className={`block text-xs font-semibold mb-1 ${darkMode ? "text-zinc-450" : "text-zinc-600"}`}>
-              Speculative Animation Loop Idea{" "}
-              <span className="font-normal text-zinc-400">(Optional)</span>
-            </label>
-            <textarea
-              rows={2}
-              value={brand.user_idea}
-              onChange={(e) =>
-                setBrand({ ...brand, user_idea: e.target.value })
-              }
-              placeholder="Describe a loose video sequence idea you've got. Leave empty and the AI will design fully personalized concepts."
-              className={`w-full text-sm px-3 py-2 bg-transparent outline-none border-b border-transparent focus:border-zinc-500 resize-none ${
-                darkMode
-                  ? "text-zinc-200 placeholder-zinc-600"
-                  : "text-zinc-800 placeholder-zinc-400"
-              }`}
-            />
-          </div>
         </div>
 
         {/* Submit */}
@@ -160,3 +133,4 @@ export function CampaignBrief({
     </div>
   );
 }
+
