@@ -49,7 +49,7 @@ Creative Context / Notes: ${brand.creative_context}`.trim();
 
 export function buildPitchPackPrompt(
   profile: CreatorProfile,
-  brand: BrandInput
+  brand: BrandInput,
 ): string {
   return `
 ## Creator Profile
