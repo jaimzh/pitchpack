@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Sparkles } from "lucide-react";
+import { Sparkle } from "@phosphor-icons/react";
 import { OutreachPackResponse } from "@/types";
 import { PitchPackTabs, PitchPackTabType } from "./tabs-nav";
 import { EmailsTab } from "./tabs/emails-tab";
@@ -16,7 +16,6 @@ interface PitchPackWorkspaceProps {
   isGenerating: boolean;
   error: string | null;
   onErrorClear: () => void;
-  darkMode: boolean;
 }
 
 export function PitchPackWorkspace({
@@ -24,7 +23,6 @@ export function PitchPackWorkspace({
   isGenerating,
   error,
   onErrorClear,
-  darkMode,
 }: PitchPackWorkspaceProps) {
   const [activeTab, setActiveTab] = useState<PitchPackTabType>("emails");
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
@@ -32,7 +30,7 @@ export function PitchPackWorkspace({
 
   // If currently spinning or loading
   if (isGenerating) {
-    return <PitchPackLoading darkMode={darkMode} />;
+    return <PitchPackLoading />;
   }
 
   // If hit an API/server exception
@@ -45,16 +43,12 @@ export function PitchPackWorkspace({
 
   return (
     <div
-      className={`border rounded-2xl p-6 transition-colors animate-in fade-in duration-300 ${
-        darkMode
-          ? "border-zinc-900 bg-zinc-950/30"
-          : "border-zinc-200 bg-[#fcfcfc] shadow-xs"
-      }`}
+      className="border rounded-2xl p-6 transition-colors animate-in fade-in duration-300 border-pitchpack-border bg-pitchpack-card-subtle shadow-xs"
     >
       {/* Section heading — mirrors Campaign Brief */}
-      <div className="flex items-center gap-2 mb-4 pb-3 border-b border-dashed border-zinc-200 dark:border-zinc-900">
-        <Sparkles className="w-4 h-4 text-zinc-500 dark:text-zinc-400" />
-        <h2 className="text-xs font-mono uppercase tracking-widest font-bold text-zinc-500">
+      <div className="flex items-center gap-2 mb-4 pb-3 border-b border-dashed border-pitchpack-border">
+        <Sparkle className="w-4 h-4 text-pitchpack-text-muted" />
+        <h2 className="text-xs font-mono uppercase tracking-widest font-bold text-pitchpack-text-muted">
           Generated Outreach Suite
         </h2>
       </div>
@@ -64,15 +58,13 @@ export function PitchPackWorkspace({
         activeTab={activeTab}
         onTabChange={(tab) => {
           setActiveTab(tab);
-          // Auto-reset copying & subject indexes when switching tabs for best UX
           setCopiedKey(null);
           setSelectedSubjectIdx(0);
         }}
-        darkMode={darkMode}
       />
 
       {/* Divider between tabs and content */}
-      <div className="my-5 border-t border-zinc-100 dark:border-zinc-900" />
+      <div className="my-5 border-t border-pitchpack-border-subtle" />
 
       {/* Main output viewport */}
       {activeTab === "emails" && (
@@ -82,7 +74,6 @@ export function PitchPackWorkspace({
           setCopiedKey={setCopiedKey}
           selectedSubjectIdx={selectedSubjectIdx}
           setSelectedSubjectIdx={setSelectedSubjectIdx}
-          darkMode={darkMode}
         />
       )}
 
@@ -91,7 +82,6 @@ export function PitchPackWorkspace({
           result={result}
           copiedKey={copiedKey}
           setCopiedKey={setCopiedKey}
-          darkMode={darkMode}
         />
       )}
 
@@ -100,7 +90,6 @@ export function PitchPackWorkspace({
           result={result}
           copiedKey={copiedKey}
           setCopiedKey={setCopiedKey}
-          darkMode={darkMode}
         />
       )}
     </div>

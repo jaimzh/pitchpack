@@ -1,24 +1,8 @@
 import { GoogleGenAI } from "@google/genai";
 import { CreatorProfile, BrandInput, OutreachPackResponse } from "@/types";
+import { buildPitchPackPrompt } from "./prompts/pitch-pack-prompt";
 
 const MODEL = "gemini-2.5-flash";
-
-function formatProfile(profile: CreatorProfile): string {
-  return `Creator Name: ${profile.creatorName} (${profile.name})
-Bio: ${profile.bio}
-Unique Angle: ${profile.uniqueAngle ?? "N/A"}
-Tone: ${profile.tone}
-TikTok Followers: ${profile.tiktokFollowers.toLocaleString()}
-YouTube Followers: ${profile.youtubeFollowers.toLocaleString()}
-Portfolio: ${profile.portfolioLinks.join(", ")}
-Services: ${profile.services.join(", ")}`.trim();
-}
-
-function formatBrand(brand: BrandInput): string {
-  return `Brand Name: ${brand.brand_name}
-Website: ${brand.website || "N/A"}
-Creative Context / Notes: ${brand.creative_context}`.trim();
-}
 
 export async function generateFullPack(
   profile: CreatorProfile,
@@ -27,41 +11,7 @@ export async function generateFullPack(
 ): Promise<OutreachPackResponse> {
   const ai = new GoogleGenAI(byokKey ? { apiKey: byokKey } : {});
 
-  const prompt = `## Creator Profile
-${formatProfile(profile)}
-
-## Brand to Pitch
-${formatBrand(brand)}
-
-Generate a complete outreach pack matching this exact JSON schema (no extra keys):
-{
-  "brand_snapshot": {
-    "brand_name": "string",
-    "creative_tone": "one sentence describing the brand's visual/creative style",
-    "target_audience": "who the brand speaks to",
-    "core_connection_hook": "why THIS creator is a natural fit for THIS brand",
-    "suggested_angle": "a concrete creative concept for the collab"
-  },
-  "outreach_pack": {
-    "initial_email": {
-      "subject": "punchy email subject line",
-      "body": "full email body, warm but professional, 150-220 words"
-    },
-    "follow_up_email": {
-      "subject": "string",
-      "body": "concise follow-up, 80-120 words"
-    },
-    "dm_version": {
-      "body": "casual DM, 60-90 words, conversational tone"
-    },
-    "no_budget_response": {
-      "body": "graceful reply for when brand says no budget, offer alternatives"
-    }
-  },
-  "subject_lines": ["string", "string", "string"],
-  "animation_ideas": ["string", "string", "string"],
-  "strategy_notes": "3-4 bullet points on negotiation strategy and next steps"
-}`;
+  const prompt = buildPitchPackPrompt(profile, brand);
 
   console.log("\n================ AI INPUT ================\n" + prompt + "\n==========================================\n");
 

@@ -2,6 +2,20 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+
+::-webkit-scrollbar {
+  width: 2px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,.12);
+  border-radius: 999px;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -59,18 +73,54 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* ==========================================================================
+     PITCHPACK CUSTOM DESIGN SYSTEM - THEME COLORS (SINGLE SOURCE OF TRUTH)
+     ========================================================================== */
+  
+  /* Background / Surface Colors */
+  --color-pitchpack-bg: var(--pitchpack-bg);                 /* Main background of the app */
+  --color-pitchpack-card: var(--pitchpack-card);             /* Main card & form inputs background (#fcfcfc) */
+  --color-pitchpack-card-subtle: var(--pitchpack-card-subtle); /* Header section & subtle card backgrounds */
+  
+  /* Text / Typography Colors */
+  --color-pitchpack-text: var(--pitchpack-text);             /* Primary body text & headings */
+  --color-pitchpack-text-muted: var(--pitchpack-text-muted); /* Secondary description & body text */
+  --color-pitchpack-text-light: var(--pitchpack-text-light); /* Placeholders & subdued labels */
+
+  /* Border / Outline / Accent Colors */
+  --color-pitchpack-border: var(--pitchpack-border);         /* Main card, inputs, & divider borders */
+  --color-pitchpack-border-subtle: var(--pitchpack-border-subtle); /* Inner dividers & extra light lines */
+  --color-pitchpack-border-hover: var(--pitchpack-border-hover);   /* Highlighted borders on hover/focus */
+  --color-pitchpack-ring: var(--pitchpack-ring);             /* Focus rings & active selections */
 }
 
-@custom-variant dark (&:where(.dark, .dark *));
-
 :root {
+  /* ==========================================================================
+     PITCHPACK CUSTOM DESIGN SYSTEM - VARIABLE DEFINITIONS
+     ========================================================================== */
+  --pitchpack-bg: oklch(0.985 0 0);
+  --pitchpack-card: hsl(0, 0%, 100%);
+  --pitchpack-card-subtle: #fcfcfc;
+  
+  --pitchpack-text: oklch(0.145 0 0);
+  --pitchpack-text-muted: oklch(0.556 0 0);
+  --pitchpack-text-light: oklch(0.708 0 0);
+
+  --pitchpack-border: rgb(228 228 231);
+
+
+  --pitchpack-border-subtle: oklch(0.97 0 0);
+  --pitchpack-border-hover: oklch(0.708 0 0);
+  --pitchpack-ring: oklch(0.708 0 0);
+
   --bg: hsl(0, 0%, 95%);
   --bg-light: hsl(0, 0%, 96%);
   --bg-lightest: hsl(0, 0%, 100%);
   --bg-dark: hsl(0, 0%, 90%);
 
   --text: hsl(0, 0%, 5%);
-  --text-muted: hsl(0, 0%, 30%);
+  --text-muted: hsl(0, 0%, 25%);
   --highlightest: hsl(0, 0%, 100%);
 
   --shadow-color: rgba(0, 0, 0, 0.05);
@@ -147,26 +197,6 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
-:root.dark {
-  --bg: hsl(0, 0%, 5%);
-  --bg-light: hsl(0, 0%, 10%);
-  --bg-lightest: hsl(0, 0%, 41%);
-  --bg-dark: hsl(0, 0%, 0%);
-
-  --text: hsl(0, 0%, 95%);
-  --text-muted: hsl(0, 0%, 70%);
-
-  --highlightest: hsl(0, 0%, 44%);
-
-  --shadow-color: rgba(0, 0, 0, 0.4);
-  --gradient: linear-gradient(0deg, var(--bg) 95%, var(--bg-light));
-  --gradient-hover: linear-gradient(0deg, var(--bg), var(--bg-light));
-  --gradient-hover-soft: linear-gradient(0deg, var(--bg), var(--bg-light));
-
-  --background: var(--bg);
-  --foreground: var(--text);
-}
-
 .card {
   @apply border border-border rounded-2xl bg-gradient p-6;
   transition-property: transform, border-color, background-image;
@@ -186,40 +216,6 @@
   box-shadow:
     0 10px 15px -3px var(--shadow-color),
     0 4px 6px -4px var(--shadow-color);
-}
-
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
 }
 
 @layer base {

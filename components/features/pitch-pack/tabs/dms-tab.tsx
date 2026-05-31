@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Copy, Check, RefreshCw } from "lucide-react";
+import { Copy, Check } from "@phosphor-icons/react";
 import { OutreachPackResponse } from "@/types";
 import { copyText } from "@/lib/copy-utils";
 
@@ -9,28 +9,20 @@ interface DmsTabProps {
   result: OutreachPackResponse;
   copiedKey: string | null;
   setCopiedKey: (key: string | null) => void;
-  darkMode: boolean;
 }
 
 export function DmsTab({
   result,
   copiedKey,
   setCopiedKey,
-  darkMode,
 }: DmsTabProps) {
-  const composerCardClass = `border rounded-2xl overflow-hidden transition-all ${
-    darkMode
-      ? "border-zinc-900 bg-zinc-950/40"
-      : "border-zinc-200 bg-[#fcfcfc] shadow-xs"
-  }`;
+  const composerCardClass = "border rounded-2xl overflow-hidden transition-all border-pitchpack-border bg-pitchpack-card shadow-xs";
 
-  const headerSectionClass = `px-5 py-4 flex items-center justify-between gap-3 ${
-    darkMode ? "bg-zinc-900/10" : "bg-zinc-50/50"
-  }`;
+  const headerSectionClass = "px-5 py-4 flex items-center justify-between gap-3 bg-pitchpack-card-subtle";
 
-  const labelClass = `text-[10px] font-mono uppercase tracking-wider text-zinc-400 dark:text-zinc-500 font-extrabold block mb-1`;
+  const labelClass = `text-[10px] font-mono uppercase tracking-wider text-pitchpack-text-muted font-extrabold block mb-1`;
 
-  const subtleCopyBtn = `inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-transparent hover:border-zinc-200 dark:hover:border-zinc-800 text-xs font-medium text-zinc-500 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-50 transition-all cursor-pointer`;
+  const subtleCopyBtn = `inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-transparent hover:border-pitchpack-border text-xs font-medium text-pitchpack-text-muted hover:text-pitchpack-text transition-all cursor-pointer`;
 
   return (
     <div className="space-y-6">
@@ -38,31 +30,34 @@ export function DmsTab({
       <div className={composerCardClass}>
         {/* Header */}
         <div className={headerSectionClass}>
-          <div className="flex items-center gap-2.5">
-            <span className="text-[10px] bg-zinc-100 dark:bg-zinc-900 text-zinc-500 dark:text-zinc-400 px-2 py-0.5 rounded-md font-mono font-bold border border-zinc-200 dark:border-zinc-800">
+          <div className="flex items-center gap-2.5 group">
+            <span className="text-[10px] bg-pitchpack-card-subtle text-pitchpack-text-muted px-2 py-0.5 rounded-md font-mono font-bold border border-pitchpack-border">
               STEP 3
             </span>
-            <h3 className="text-sm font-bold text-zinc-950 dark:text-zinc-50">
+            <h3 className="text-sm font-bold text-pitchpack-text">
               Direct Message Pitch
             </h3>
+            <span className="text-[10px] text-pitchpack-text-light opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+              A casual pitch for Instagram, Twitter, or LinkedIn DMs.
+            </span>
           </div>
 
         </div>
 
         {/* Divider */}
-        <div className="border-t border-zinc-100 dark:border-zinc-900" />
+        <div className="border-t border-pitchpack-border-subtle" />
 
         {/* Body */}
         <div className="px-5 py-5 space-y-4">
           <div className="space-y-1.5">
             <span className={labelClass}>Message</span>
-            <div className="font-sans text-[13px] sm:text-sm whitespace-pre-wrap leading-relaxed text-zinc-800 dark:text-zinc-200 font-normal">
+            <div className="font-sans text-[13px] sm:text-sm whitespace-pre-wrap leading-relaxed text-pitchpack-text font-normal">
               {result.outreach_pack.dm_version.body}
             </div>
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end pt-4 border-t border-zinc-100 dark:border-zinc-900/60">
+          <div className="flex items-center justify-end pt-4 border-t border-pitchpack-border-subtle">
             <button
               onClick={() =>
                 copyText(result.outreach_pack.dm_version.body, "dm-pack", setCopiedKey)
@@ -76,7 +71,7 @@ export function DmsTab({
                 </>
               ) : (
                 <>
-                  <Copy className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500" />
+                  <Copy className="w-3.5 h-3.5 text-pitchpack-text-light" />
                   <span>Copy Message</span>
                 </>
               )}
@@ -89,36 +84,34 @@ export function DmsTab({
       <div className={composerCardClass}>
         {/* Header */}
         <div className={headerSectionClass}>
-          <div className="flex items-center gap-2.5">
-            <span className="text-[10px] bg-zinc-100 dark:bg-zinc-900 text-zinc-500 dark:text-zinc-400 px-2 py-0.5 rounded-md font-mono font-bold border border-zinc-200 dark:border-zinc-800">
+          <div className="flex items-center gap-2.5 group">
+            <span className="text-[10px] bg-pitchpack-card-subtle text-pitchpack-text-muted px-2 py-0.5 rounded-md font-mono font-bold border border-pitchpack-border">
               STEP 4
             </span>
-            <div>
-              <h3 className="text-sm font-bold text-zinc-950 dark:text-zinc-50">
-                Zero-Budget Reply
-              </h3>
-              <p className="text-[10px] text-zinc-400 dark:text-zinc-500 mt-0.5">
-                Fallback response for unpaid/gifted collaborations
-              </p>
-            </div>
+            <h3 className="text-sm font-bold text-pitchpack-text">
+              Zero-Budget Reply
+            </h3>
+            <span className="text-[10px] text-pitchpack-text-light opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+              Fallback response for unpaid/gifted collaborations.
+            </span>
           </div>
 
         </div>
 
         {/* Divider */}
-        <div className="border-t border-zinc-100 dark:border-zinc-900" />
+        <div className="border-t border-pitchpack-border-subtle" />
 
         {/* Body */}
         <div className="px-5 py-5 space-y-4">
           <div className="space-y-1.5">
             <span className={labelClass}>Response</span>
-            <div className="font-sans text-[13px] sm:text-sm whitespace-pre-wrap leading-relaxed text-zinc-800 dark:text-zinc-200 font-normal">
+            <div className="font-sans text-[13px] sm:text-sm whitespace-pre-wrap leading-relaxed text-pitchpack-text font-normal">
               {result.outreach_pack.no_budget_response.body}
             </div>
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end pt-4 border-t border-zinc-100 dark:border-zinc-900/60">
+          <div className="flex items-center justify-end pt-4 border-t border-pitchpack-border-subtle">
             <button
               onClick={() =>
                 copyText(
@@ -136,7 +129,7 @@ export function DmsTab({
                 </>
               ) : (
                 <>
-                  <Copy className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500" />
+                  <Copy className="w-3.5 h-3.5 text-pitchpack-text-light" />
                   <span>Copy Response</span>
                 </>
               )}

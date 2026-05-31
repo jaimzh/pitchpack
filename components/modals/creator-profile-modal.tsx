@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { User, X, Link2, Sparkles, Smile, Plus } from "lucide-react";
+import React, { useState, useRef } from "react";
+import { UserIcon, X, Link, Sparkle, Smiley, Plus, UploadSimple } from "@phosphor-icons/react";
 import { CreatorProfile } from "@/types";
 import { Button } from "@/components/ui/button";
 
@@ -23,18 +23,64 @@ interface CreatorProfileModalProps {
   onClose: () => void;
   profile: CreatorProfile;
   setProfile: (profile: CreatorProfile) => void;
-  darkMode: boolean;
 }
+
+const inputClass = () =>
+  `w-full text-sm px-3 py-2 rounded-lg border outline-none transition-all bg-pitchpack-card border-pitchpack-border text-pitchpack-text placeholder-pitchpack-text-light focus:border-pitchpack-border-hover shadow-xs`;
 
 export function CreatorProfileModal({
   isOpen,
   onClose,
   profile,
   setProfile,
-  darkMode,
 }: CreatorProfileModalProps) {
   const [newService, setNewService] = useState("");
   const [newPortfolio, setNewPortfolio] = useState("");
+  const [importError, setImportError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImportClick = () => {
+    setImportError(null);
+    fileInputRef.current?.click();
+  };
+
+  const handleImportFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const parsed = JSON.parse(ev.target?.result as string);
+        // Validate required fields
+        if (
+          typeof parsed.name !== "string" ||
+          typeof parsed.creatorName !== "string" ||
+          typeof parsed.bio !== "string" ||
+          typeof parsed.tone !== "string"
+        ) {
+          setImportError("Invalid profile JSON — missing required fields.");
+          return;
+        }
+        setProfile({
+          name: parsed.name ?? "",
+          creatorName: parsed.creatorName ?? "",
+          bio: parsed.bio ?? "",
+          uniqueAngle: parsed.uniqueAngle ?? "",
+          tone: parsed.tone ?? "",
+          tiktokFollowers: Number(parsed.tiktokFollowers) || 0,
+          youtubeFollowers: Number(parsed.youtubeFollowers) || 0,
+          portfolioLinks: Array.isArray(parsed.portfolioLinks) ? parsed.portfolioLinks : [],
+          services: Array.isArray(parsed.services) ? parsed.services : [],
+        });
+        setImportError(null);
+      } catch {
+        setImportError("Failed to parse JSON file.");
+      }
+    };
+    reader.readAsText(file);
+    // Reset so same file can be re-imported
+    e.target.value = "";
+  };
 
   if (!isOpen) return null;
 
@@ -88,23 +134,19 @@ export function CreatorProfileModal({
         <TiktokIcon className="w-3.5 h-3.5 text-text shrink-0" />
       );
     }
-    return <Link2 className="w-3.5 h-3.5 text-text shrink-0" />;
+    return <Link className="w-3.5 h-3.5 text-text shrink-0" />;
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
       <div
-        className={`w-full max-w-lg rounded-2xl border p-6 shadow-2xl transition-colors duration-300 ${
-          darkMode
-            ? "bg-[#161616] border-[#292929] text-zinc-200"
-            : "bg-[#FCFCFC] border-[#E4E4E3] text-zinc-800"
-        }`}
+        className="w-full max-w-lg rounded-2xl border border-pitchpack-border bg-pitchpack-bg p-6 shadow-2xl text-pitchpack-text transition-all duration-300"
       >
         {/* Header */}
-        <div className="flex justify-between items-center mb-5 pb-3 border-b border-dashed border-[#292929] dark:border-zinc-800">
+        <div className="flex justify-between items-center mb-5 pb-3 border-b border-dashed border-pitchpack-border">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-primary/10 dark:bg-zinc-800 flex items-center justify-center text-primary dark:text-zinc-300">
-              <User className="w-4 h-4" />
+            <div className="w-7 h-7  flex items-center justify-center text-pitchpack-text">
+              <UserIcon className="w-4 h-4" />
             </div>
             <div>
               <h3 className="font-bold text-base tracking-tight">
@@ -112,29 +154,50 @@ export function CreatorProfileModal({
               </h3>
             </div>
           </div>
-          <Button
-            variant="ghost"
-            size="icon-xs"
-            onClick={onClose}
-            className="text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors"
-          >
-            <X className="w-4 h-4" />
-          </Button>
+          <div className="flex items-center gap-1">
+            {/* Hidden file input for JSON import */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".json,application/json"
+              className="hidden"
+              onChange={handleImportFile}
+            />
+            <Button
+              variant="ghost"
+              size="icon-xs"
+              onClick={handleImportClick}
+              className="text-text-muted hover:text-text transition-colors"
+              title="Import profile from JSON"
+            >
+              <UploadSimple className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon-xs"
+              onClick={onClose}
+              className="text-text-muted hover:text-text transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
+        {importError && (
+          <p className="text-xs text-red-500 dark:text-red-400 mb-3 -mt-2">{importError}</p>
+        )}
 
         {/* Scrollable Form */}
         <div className="space-y-5 max-h-[460px] overflow-y-auto pr-1">
           
           {/* Section 1: Creative Persona */}
           <div
-            className={`p-4 rounded-xl border space-y-4 transition-colors ${
-              darkMode
-                ? "bg-[#1A1A1A] border-[#292929]"
-                : "bg-[#FBFBFA] border-[#DFDFDE]"
-            }`}
+            className="p-4 rounded-xl border border-pitchpack-border bg-pitchpack-card-subtle space-y-4 transition-colors"
           >
-            <div className="flex items-center gap-1.5 border-b border-dashed border-[#292929] dark:border-zinc-800 pb-2">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+            <div className="flex items-center gap-1.5 border-b border-dashed border-border pb-2">
+
+
+
+              <h4 className="text-xs font-bold uppercase tracking-wider text-text-muted">
                 1. Creator Info
               </h4>
             </div>
@@ -142,7 +205,7 @@ export function CreatorProfileModal({
             {/* Real Name & Stage Name */}
             <div className="grid grid-cols-2 gap-3">
               <div className="group">
-                <label className="block text-[10px] font-mono text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">
+                <label className="block text-[10px] font-mono text-text-muted uppercase tracking-wider mb-1.5">
                   Your Name
                 </label>
                 <input
@@ -151,19 +214,15 @@ export function CreatorProfileModal({
                   onChange={(e) =>
                     setProfile({ ...profile, name: e.target.value })
                   }
-                  className={`w-full text-xs px-2.5 py-1.5 rounded-lg border outline-none transition-all focus:ring-1 focus:ring-zinc-400 dark:focus:ring-zinc-500 ${
-                    darkMode
-                      ? "bg-[#252525] border-[#2D2D2D] text-zinc-200"
-                      : "bg-white border-[#DFDFDE] text-zinc-800"
-                  }`}
+                  className={inputClass()}
                   placeholder="e.g. James"
                 />
-                <span className="text-[9px] text-zinc-400 dark:text-zinc-500 mt-1 block opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-200">
+                <span className="text-[9px] text-text-muted mt-1 block opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-200">
                   Used for signing off on emails & pitches
                 </span>
               </div>
               <div className="group">
-                <label className="block text-[10px] font-mono text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">
+                <label className="block text-[10px] font-mono text-text-muted uppercase tracking-wider mb-1.5">
                   Creator / Brand Name
                 </label>
                 <input
@@ -172,14 +231,10 @@ export function CreatorProfileModal({
                   onChange={(e) =>
                     setProfile({ ...profile, creatorName: e.target.value })
                   }
-                  className={`w-full text-xs px-2.5 py-1.5 rounded-lg border outline-none transition-all focus:ring-1 focus:ring-zinc-400 dark:focus:ring-zinc-500 ${
-                    darkMode
-                      ? "bg-[#252525] border-[#2D2D2D] text-zinc-200"
-                      : "bg-white border-[#DFDFDE] text-zinc-800"
-                  }`}
+                  className={inputClass()}
                   placeholder="e.g. Jaimz Art"
                 />
-                <span className="text-[9px] text-zinc-400 dark:text-zinc-500 mt-1 block opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-200">
+                <span className="text-[9px] text-text-muted mt-1 block opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-200">
                   What your audience knows you by
                 </span>
               </div>
@@ -188,7 +243,7 @@ export function CreatorProfileModal({
             {/* Outbound Tone & Style Hook */}
             <div className="grid grid-cols-2 gap-3">
               <div className="group">
-                <label className="block text-[10px] font-mono text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">
+                <label className="block text-[10px] font-mono text-text-muted uppercase tracking-wider mb-1.5">
                   Pitch Tone
                 </label>
                 <input
@@ -197,19 +252,15 @@ export function CreatorProfileModal({
                   onChange={(e) =>
                     setProfile({ ...profile, tone: e.target.value })
                   }
-                  className={`w-full text-xs px-2.5 py-1.5 rounded-lg border outline-none transition-all focus:ring-1 focus:ring-zinc-400 dark:focus:ring-zinc-500 ${
-                    darkMode
-                      ? "bg-[#252525] border-[#2D2D2D] text-zinc-200"
-                      : "bg-white border-[#DFDFDE] text-zinc-800"
-                  }`}
+                  className={inputClass()}
                   placeholder="e.g. friendly, professional, hyped"
                 />
-                <span className="text-[9px] text-zinc-400 dark:text-zinc-500 mt-1 block opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-200">
+                <span className="text-[9px] text-text-muted mt-1 block opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-200">
                   How should your pitches sound?
                 </span>
               </div>
               <div className="group">
-                <label className="block text-[10px] font-mono text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">
+                <label className="block text-[10px] font-mono text-text-muted uppercase tracking-wider mb-1.5">
                   Your &quot;Secret Sauce&quot;
                 </label>
                 <input
@@ -218,14 +269,10 @@ export function CreatorProfileModal({
                   onChange={(e) =>
                     setProfile({ ...profile, uniqueAngle: e.target.value })
                   }
-                  className={`w-full text-xs px-2.5 py-1.5 rounded-lg border outline-none transition-all focus:ring-1 focus:ring-zinc-400 dark:focus:ring-zinc-500 ${
-                    darkMode
-                      ? "bg-[#252525] border-[#2D2D2D] text-zinc-200"
-                      : "bg-white border-[#DFDFDE] text-zinc-800"
-                  }`}
+                  className={inputClass()}
                   placeholder="e.g. Humorous storytelling..."
                 />
-                <span className="text-[9px] text-zinc-400 dark:text-zinc-500 mt-1 block opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-200">
+                <span className="text-[9px] text-text-muted mt-1 block opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-200">
                   What makes you unique to work with?
                 </span>
               </div>
@@ -233,18 +280,14 @@ export function CreatorProfileModal({
 
             {/* Creative Bio */}
             <div>
-              <label className="block text-[10px] font-mono text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">
+              <label className="block text-[10px] font-mono text-text-muted uppercase tracking-wider mb-1.5">
                 Quick Bio
               </label>
               <textarea
                 rows={2}
                 value={profile.bio}
                 onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
-                className={`w-full text-xs px-2.5 py-2 rounded-lg border outline-none resize-none transition-all focus:ring-1 focus:ring-zinc-400 dark:focus:ring-zinc-500 ${
-                  darkMode
-                    ? "bg-[#252525] border-[#2D2D2D] text-zinc-200"
-                    : "bg-white border-[#DFDFDE] text-zinc-800"
-                }`}
+                className={inputClass()}
                 placeholder="Describe your content style in one simple sentence..."
               />
             </div>
@@ -252,14 +295,10 @@ export function CreatorProfileModal({
 
           {/* Section 2: Audience & Reach */}
           <div
-            className={`p-4 rounded-xl border space-y-4 transition-colors ${
-              darkMode
-                ? "bg-[#1A1A1A] border-[#292929]"
-                : "bg-[#FBFBFA] border-[#DFDFDE]"
-            }`}
+            className="p-4 rounded-xl border border-pitchpack-border bg-pitchpack-card-subtle space-y-4 transition-colors"
           >
-            <div className="flex items-center gap-1.5 border-b border-dashed border-[#292929] dark:border-zinc-800 pb-2">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+            <div className="flex items-center gap-1.5 border-b border-dashed border-border pb-2">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-text-muted">
                 2. Audience & Reach
               </h4>
             </div>
@@ -268,7 +307,7 @@ export function CreatorProfileModal({
               <div className="group">
                 <div className="flex items-center gap-1.5 mb-1.5">
                   {getLinkIcon("tiktok.com")}
-                  <label className="block text-[10px] font-mono text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+                  <label className="block text-[10px] font-mono text-text-muted uppercase tracking-wider">
                     TikTok
                   </label>
                 </div>
@@ -287,21 +326,17 @@ export function CreatorProfileModal({
                       tiktokFollowers: isNaN(val) ? 0 : val,
                     });
                   }}
-                  className={`w-full text-xs px-2.5 py-1.5 rounded-lg border outline-none transition-all focus:ring-1 focus:ring-zinc-400 dark:focus:ring-zinc-500 ${
-                    darkMode
-                      ? "bg-[#252525] border-[#2D2D2D] text-zinc-200"
-                      : "bg-white border-[#DFDFDE] text-zinc-800"
-                  }`}
+                  className={inputClass()}
                   placeholder="0 (Optional)"
                 />
-                <span className="text-[9px] text-zinc-400 dark:text-zinc-500 mt-1 block opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-200">
+                <span className="text-[9px] text-text-muted mt-1 block opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-200">
                   How many TikTok followers do you have?
                 </span>
               </div>
               <div className="group">
                 <div className="flex items-center gap-1.5 mb-1.5">
                   {getLinkIcon("youtube.com")}
-                  <label className="block text-[10px] font-mono text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+                  <label className="block text-[10px] font-mono text-text-muted uppercase tracking-wider">
                     YouTube
                   </label>
                 </div>
@@ -320,31 +355,23 @@ export function CreatorProfileModal({
                       youtubeFollowers: isNaN(val) ? 0 : val,
                     });
                   }}
-                  className={`w-full text-xs px-2.5 py-1.5 rounded-lg border outline-none transition-all focus:ring-1 focus:ring-zinc-400 dark:focus:ring-zinc-500 ${
-                    darkMode
-                      ? "bg-[#252525] border-[#2D2D2D] text-zinc-200"
-                      : "bg-white border-[#DFDFDE] text-zinc-800"
-                  }`}
+                  className={inputClass()}
                   placeholder="0 (Optional)"
                 />
-                <span className="text-[9px] text-zinc-400 dark:text-zinc-500 mt-1 block opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-200">
+                <span className="text-[9px] text-text-muted mt-1 block opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-200">
                   How many YouTube subscribers do you have?
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Section 3: Portfolio Showcase */}
+          {/* Section 3: Portfolio & Showcase Links */}
           <div
-            className={`p-4 rounded-xl border space-y-4 transition-colors ${
-              darkMode
-                ? "bg-[#1A1A1A] border-[#292929]"
-                : "bg-[#FBFBFA] border-[#DFDFDE]"
-            }`}
+            className="p-4 rounded-xl border border-pitchpack-border bg-pitchpack-card-subtle space-y-4 transition-colors"
           >
-            <div className="flex items-center gap-1.5 border-b border-dashed border-[#292929] dark:border-zinc-800 pb-2">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-                3. Portfolio & Channels
+            <div className="flex items-center gap-1.5 border-b border-dashed border-border pb-2">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-text-muted">
+                3. Showcase Links
               </h4>
             </div>
 
@@ -353,11 +380,7 @@ export function CreatorProfileModal({
                 {profile.portfolioLinks.map((link, idx) => (
                   <span
                     key={idx}
-                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-mono border transition-all hover:scale-[1.02] ${
-                      darkMode
-                        ? "bg-[#252525] border-[#2D2D2D] text-zinc-300"
-                        : "bg-white border-[#DFDFDE] text-zinc-700"
-                    }`}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-mono border border-border bg-bg-lightest text-text transition-all hover:scale-[1.02]"
                   >
                     {getLinkIcon(link)}
                     <span className="truncate max-w-[200px]">{link}</span>
@@ -366,7 +389,7 @@ export function CreatorProfileModal({
                       onClick={() => removePortfolio(idx)}
                       variant="ghost"
                       size="icon-xs"
-                      className="text-zinc-400 hover:text-red-500 h-4 w-4 p-0 ml-0.5 transition-colors animate-fade-in"
+                      className="text-text-muted hover:text-red-500 h-4 w-4 p-0 ml-0.5 transition-colors animate-fade-in"
                       title="Remove"
                     >
                       <X className="w-2.5 h-2.5" />
@@ -375,7 +398,7 @@ export function CreatorProfileModal({
                 ))}
               </div>
             ) : (
-              <p className="text-[11px] text-zinc-400 dark:text-zinc-500 italic mb-2">
+              <p className="text-[11px] text-text-muted italic mb-2">
                 No showcase links added yet. Let&apos;s add one below!
               </p>
             )}
@@ -387,11 +410,7 @@ export function CreatorProfileModal({
                   placeholder="e.g. youtube.com/c/jaimzart"
                   value={newPortfolio}
                   onChange={(e) => setNewPortfolio(e.target.value)}
-                  className={`flex-1 text-xs px-2.5 py-1.5 rounded-md border outline-none ${
-                    darkMode
-                      ? "bg-[#202020] border-[#2D2D2D] text-zinc-200"
-                      : "bg-white border-[#DFDFDE] text-zinc-800"
-                  }`}
+                  className={inputClass()}
                 />
                 <Button
                   type="button"
@@ -403,7 +422,7 @@ export function CreatorProfileModal({
                   Add
                 </Button>
               </div>
-              <span className="text-[9px] text-zinc-400 dark:text-zinc-500 mt-1 block opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-200">
+              <span className="text-[9px] text-text-muted mt-1 block opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-200">
                 Link directly to your best social channels, playlists, or videos.
               </span>
             </div>
@@ -411,14 +430,10 @@ export function CreatorProfileModal({
 
           {/* Section 4: Key Offerings */}
           <div
-            className={`p-4 rounded-xl border space-y-4 transition-colors ${
-              darkMode
-                ? "bg-[#1A1A1A] border-[#292929]"
-                : "bg-[#FBFBFA] border-[#DFDFDE]"
-            }`}
+           className="p-4 rounded-xl border border-pitchpack-border bg-pitchpack-card-subtle space-y-4 transition-colors"
           >
-            <div className="flex items-center gap-1.5 border-b border-dashed border-[#292929] dark:border-zinc-800 pb-2">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+            <div className="flex items-center gap-1.5 border-b border-dashed border-border pb-2">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-text-muted">
                 4. Your Services
               </h4>
             </div>
@@ -428,11 +443,7 @@ export function CreatorProfileModal({
                 {profile.services.map((svc, idx) => (
                   <span
                     key={idx}
-                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] border transition-all hover:scale-[1.02] ${
-                      darkMode
-                        ? "bg-[#252525] border-[#2D2D2D] text-zinc-300"
-                        : "bg-white border-[#DFDFDE] text-zinc-700"
-                    }`}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] border border-border bg-bg-lightest text-text transition-all hover:scale-[1.02]"
                   >
                     <span className="w-1.5 h-1.5 rounded-full bg-primary/70 shrink-0" />
                     <span>{svc}</span>
@@ -441,7 +452,7 @@ export function CreatorProfileModal({
                       onClick={() => removeService(idx)}
                       variant="ghost"
                       size="icon-xs"
-                      className="text-zinc-400 hover:text-red-500 h-4 w-4 p-0 ml-0.5 transition-colors"
+                      className="text-text-muted hover:text-red-500 h-4 w-4 p-0 ml-0.5 transition-colors"
                     >
                       <X className="w-2.5 h-2.5" />
                     </Button>
@@ -449,7 +460,7 @@ export function CreatorProfileModal({
                 ))}
               </div>
             ) : (
-              <p className="text-[11px] text-zinc-400 dark:text-zinc-500 italic mb-2">
+              <p className="text-[11px] text-text-muted italic mb-2">
                 No services added yet. Let&apos;s list one below!
               </p>
             )}
@@ -461,11 +472,7 @@ export function CreatorProfileModal({
                   placeholder="e.g. Character design"
                   value={newService}
                   onChange={(e) => setNewService(e.target.value)}
-                  className={`flex-1 text-xs px-2.5 py-1.5 rounded-md border outline-none ${
-                    darkMode
-                      ? "bg-[#202020] border-[#2D2D2D] text-zinc-200"
-                      : "bg-white border-[#DFDFDE] text-zinc-800"
-                  }`}
+                  className={inputClass()}
                 />
                 <Button
                   type="button"
@@ -473,11 +480,11 @@ export function CreatorProfileModal({
                   size="sm"
                   className="gap-1 shrink-0 font-semibold"
                 >
-                  <Plus className="w-3 h-3" />
+                  <Plus className="w-3.5 h-3.5" />
                   Add
                 </Button>
               </div>
-              <span className="text-[9px] text-zinc-400 dark:text-zinc-500 mt-1 block opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-200">
+              <span className="text-[9px] text-text-muted mt-1 block opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-200">
                 What do you offer? List services or custom creative formats.
               </span>
             </div>
@@ -485,7 +492,7 @@ export function CreatorProfileModal({
         </div>
 
         {/* Footer Actions */}
-        <div className="flex justify-end pt-3 mt-4 border-t border-dashed border-[#292929] dark:border-zinc-800">
+        <div className="flex justify-end pt-3 mt-4 border-t border-dashed border-border">
           <Button
             onClick={onClose}
             size="sm"

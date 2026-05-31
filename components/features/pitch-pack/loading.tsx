@@ -13,11 +13,7 @@ const LOADING_STEPS = [
   "Assembling final Notion Outreach Workspace...",
 ];
 
-interface PitchPackLoadingProps {
-  darkMode: boolean;
-}
-
-export function PitchPackLoading({ darkMode }: PitchPackLoadingProps) {
+export function PitchPackLoading() {
   const [loadingStepIdx, setLoadingStepIdx] = useState(0);
 
   useEffect(() => {
@@ -30,22 +26,18 @@ export function PitchPackLoading({ darkMode }: PitchPackLoadingProps) {
 
   return (
     <div
-      className={`border rounded-2xl p-12 text-center flex flex-col items-center justify-center min-h-[360px] ${
-        darkMode
-          ? "border-zinc-800 bg-[#161616]/20"
-          : "border-zinc-200 bg-white shadow-xs"
-      }`}
+      className="border rounded-2xl p-12 text-center flex flex-col items-center justify-center min-h-[360px] border-pitchpack-border bg-pitchpack-card shadow-xs"
     >
       <div className="relative mb-6">
-        <div className="w-12 h-12 border-2 border-zinc-200 dark:border-zinc-800 border-t-zinc-900 dark:border-t-zinc-100 rounded-full animate-spin" />
+        <div className="w-12 h-12 border-2 border-pitchpack-border border-t-pitchpack-text rounded-full animate-spin" />
       </div>
       <h3 className="text-base font-bold mb-1">Weaving Outreach Campaign...</h3>
-      <p className="text-xs font-mono text-zinc-500 dark:text-zinc-400 h-6 animate-pulse">
+      <p className="text-xs font-mono text-pitchpack-text-muted h-6 animate-pulse">
         {LOADING_STEPS[loadingStepIdx]}
       </p>
-      <div className="w-48 bg-zinc-200 dark:bg-zinc-850 h-1.5 rounded-full mt-4 overflow-hidden">
+      <div className="w-48 bg-pitchpack-border h-1.5 rounded-full mt-4 overflow-hidden">
         <div
-          className="bg-zinc-900 dark:bg-zinc-100 h-full transition-all duration-300"
+          className="bg-pitchpack-text h-full transition-all duration-300"
           style={{
             width: `${((loadingStepIdx + 1) / LOADING_STEPS.length) * 100}%`,
           }}

@@ -1,6 +1,6 @@
 "use client";
 
-import { Sliders, Sparkles } from "lucide-react";
+import { PencilSimple, Package } from "@phosphor-icons/react";
 import { OutreachPackResponse } from "@/types";
 
 export type MainTab = "brief" | "pitchpack";
@@ -10,7 +10,6 @@ interface MainTabNavProps {
   onTabChange: (tab: MainTab) => void;
   result: OutreachPackResponse | null;
   isGenerating: boolean;
-  darkMode: boolean;
 }
 
 export function MainTabNav({
@@ -18,61 +17,72 @@ export function MainTabNav({
   onTabChange,
   result,
   isGenerating,
-  darkMode,
 }: MainTabNavProps) {
   const pitchpackEnabled = result !== null || isGenerating;
 
-  const baseTab =
-    "flex-1 flex items-center justify-center gap-2 py-2.5 text-xs font-semibold rounded-lg transition-all border border-transparent";
+  const baseBtn =
+    "w-full flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-lg transition-all border border-transparent";
 
-  const activeClass = darkMode
-    ? "bg-[#161616] text-white border-zinc-850 shadow-sm"
-    : "bg-white text-zinc-950 border-zinc-200 shadow-xs";
+  const activeBtn = "bg-pitchpack-card text-pitchpack-text shadow-sm ring-1 ring-pitchpack-border";
 
-  const inactiveClass = "text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 cursor-pointer";
+  const inactiveBtn = "text-pitchpack-text-muted hover:text-pitchpack-text hover:bg-black/5 cursor-pointer";
 
-  const disabledClass =
-    "text-zinc-400 dark:text-zinc-700 cursor-not-allowed opacity-40";
+  const disabledBtn =
+    "text-pitchpack-text-light cursor-not-allowed opacity-40";
+
+  const lineColor = "bg-pitchpack-text";
 
   return (
     <div
-      className={`p-1 border rounded-xl flex gap-1 transition-all ${
-        darkMode
-          ? "border-zinc-900 bg-zinc-950/60"
-          : "border-zinc-200 bg-zinc-100/65"
-      }`}
+      className="p-1.5 border rounded-xl flex gap-1 transition-all border-pitchpack-border bg-pitchpack-card-subtle"
     >
       {/* Brief tab — always clickable */}
-      <button
-        type="button"
-        onClick={() => onTabChange("brief")}
-        className={`${baseTab} ${activeTab === "brief" ? activeClass : inactiveClass}`}
-      >
-        <Sliders className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500" />
-        <span>Campaign Brief Builder</span>
-      </button>
+      <div className="flex flex-col items-center flex-1">
+        <button
+          type="button"
+          onClick={() => onTabChange("brief")}
+          className={`${baseBtn} ${activeTab === "brief" ? activeBtn : inactiveBtn}`}
+        >
+          <PencilSimple className={`w-4 h-4 transition-colors ${activeTab === "brief" ? "text-pitchpack-text" : "text-pitchpack-text-light"}`} />
+          <span>Draft Pitch</span>
+        </button>
 
-      {/* PitchPack tab — locked until a result exists or generation is in progress */}
-      <button
-        type="button"
-        onClick={() => pitchpackEnabled && onTabChange("pitchpack")}
-        disabled={!pitchpackEnabled}
-        title={
-          !pitchpackEnabled
-            ? "Generate outreach material first to unlock"
-            : "View generated campaign copy decks"
-        }
-        className={`${baseTab} ${
-          activeTab === "pitchpack"
-            ? activeClass
-            : pitchpackEnabled
-            ? inactiveClass
-            : disabledClass
-        }`}
-      >
-        <Sparkles className="w-3.5 h-3.5 text-zinc-950 dark:text-zinc-100" />
-        <span>Generated PitchPack Suite</span>
-      </button>
+        <div className=" mt-1 h-[2px] w-[95%] flex justify-center">
+          {activeTab === "brief" && (
+            <div className={`w-full h-full ${lineColor} rounded-full animate-in fade-in duration-200`}></div>
+          )}
+        </div>
+      </div>
+
+      
+      <div className="flex flex-col items-center flex-1">
+        <button
+          type="button"
+          onClick={() => pitchpackEnabled && onTabChange("pitchpack")}
+          disabled={!pitchpackEnabled}
+          title={
+            !pitchpackEnabled
+              ? "Generate outreach material first to unlock"
+              : "View generated campaign copy decks"
+          }
+          className={`${baseBtn} ${
+            activeTab === "pitchpack"
+              ? activeBtn
+              : pitchpackEnabled
+              ? inactiveBtn
+              : disabledBtn
+          }`}
+        >
+          <Package className={`w-4 h-4 transition-colors ${activeTab === "pitchpack" ? "text-pitchpack-text" : "text-pitchpack-text-light"}`} />
+          <span>View Pack</span>
+        </button>
+
+        <div className="mt-1 h-[2px] w-[95%] flex justify-center">
+          {activeTab === "pitchpack" && (
+            <div className={`w-full h-full ${lineColor} rounded-full animate-in fade-in duration-200`}></div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

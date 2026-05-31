@@ -6,7 +6,7 @@ import { INITIAL_BRAND } from "@/constants/brand";
 import { getStoredApiKey } from "@/lib/api-key-store";
 import { MainTab } from "@/components/main-tab-nav";
 
-export const FREE_TIER_LIMIT = 10;
+
 
 interface PitchPackState {
   // Modals state
@@ -20,8 +20,7 @@ interface PitchPackState {
   // BYOK / rate-limit state
   apiKey: string | null;
   setApiKey: (key: string | null) => void;
-  generationCount: number;
-  setGenerationCount: (count: number) => void;
+
 
   // Core campaign state
   profile: CreatorProfile;
@@ -65,8 +64,7 @@ export const usePitchPackStore = create<PitchPackState>((set, get) => ({
   // BYOK / rate-limit state
   apiKey: null,
   setApiKey: (key) => set({ apiKey: key }),
-  generationCount: 0,
-  setGenerationCount: (count) => set({ generationCount: count }),
+
 
   // Core campaign state
   profile: INITIAL_CREATOR_PROFILE,
@@ -78,7 +76,7 @@ export const usePitchPackStore = create<PitchPackState>((set, get) => ({
   setBrand: (brand) => set({ brand }),
 
   // Main view tab nav state
-  mainTab: "pitchpack",
+  mainTab: "brief",
   setMainTab: (tab) => set({ mainTab: tab }),
 
   // Output pack response state
@@ -118,20 +116,14 @@ export const usePitchPackStore = create<PitchPackState>((set, get) => ({
 
     // Load BYOK API key + generation count
     set({ apiKey: getStoredApiKey() });
-    const storedCount = localStorage.getItem("pitchpack_gen_count");
-    if (storedCount) set({ generationCount: parseInt(storedCount, 10) || 0 });
+
   },
 
   handleGenerate: async () => {
     const state = get();
-    const { brand, apiKey, generationCount, profile, savedPacks } = state;
+    const { brand, apiKey, profile, savedPacks } = state;
 
     if (!brand.brand_name.trim()) return;
-
-    if (!apiKey && generationCount >= FREE_TIER_LIMIT) {
-      set({ error: "Free tier limit reached. Add your own Google AI Studio API key via the key badge in the header to keep generating." });
-      return;
-    }
 
     set({ isGenerating: true, mainTab: "pitchpack", error: null, result: null });
 
@@ -201,11 +193,7 @@ export const usePitchPackStore = create<PitchPackState>((set, get) => ({
       });
       set({ result: data });
 
-      if (!apiKey) {
-        const newCount = generationCount + 1;
-        set({ generationCount: newCount });
-        localStorage.setItem("pitchpack_gen_count", String(newCount));
-      }
+
 
       const newSavedItem: SavedPack = {
         id: Date.now().toString(),
