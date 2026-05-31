@@ -16,6 +16,7 @@ interface PitchPackWorkspaceProps {
   isGenerating: boolean;
   error: string | null;
   onErrorClear: () => void;
+  onOpenApiKey: () => void;
 }
 
 export function PitchPackWorkspace({
@@ -23,6 +24,7 @@ export function PitchPackWorkspace({
   isGenerating,
   error,
   onErrorClear,
+  onOpenApiKey,
 }: PitchPackWorkspaceProps) {
   const [activeTab, setActiveTab] = useState<PitchPackTabType>("emails");
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
@@ -35,7 +37,7 @@ export function PitchPackWorkspace({
 
   // If hit an API/server exception
   if (error) {
-    return <PitchPackError error={error} onClear={onErrorClear} />;
+    return <PitchPackError error={error} onClear={onErrorClear} onOpenApiKey={onOpenApiKey} />;
   }
 
   // If no output yet

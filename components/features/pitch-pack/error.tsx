@@ -1,29 +1,61 @@
 "use client";
 
-import { Fire } from "@phosphor-icons/react";
+import { WarningCircle, Key } from "@phosphor-icons/react";
 
 interface PitchPackErrorProps {
   error: string;
   onClear: () => void;
+  onOpenApiKey?: () => void;
 }
 
-export function PitchPackError({ error, onClear }: PitchPackErrorProps) {
+function isApiKeyError(error: string): boolean {
+  const lower = error.toLowerCase();
   return (
-    <div className="bg-rose-950/15 border border-rose-900/60 p-6 rounded-2xl text-left flex gap-3.5">
-      <div className="bg-rose-900/30 p-2 rounded-lg text-rose-400 flex-shrink-0">
-        <Fire className="w-5 h-5" />
+    lower.includes("default credentials") ||
+    lower.includes("api key") ||
+    lower.includes("api_key") ||
+    lower.includes("authentication") ||
+    lower.includes("unauthenticated") ||
+    lower.includes("permission denied") ||
+    lower.includes("invalid key")
+  );
+}
+
+export function PitchPackError({ error, onClear, onOpenApiKey }: PitchPackErrorProps) {
+  const apiKeyMissing = isApiKeyError(error);
+
+  return (
+    <div className="flex flex-col items-center justify-center text-center py-16 gap-4">
+      <WarningCircle className="w-10 h-10 text-zinc-400" weight="light" />
+
+      <div className="space-y-1">
+        <p className="text-sm font-medium text-text">
+          {apiKeyMissing ? "No API key found" : "Something went wrong"}
+        </p>
+        <p className="text-xs text-text-muted max-w-xs">
+          {apiKeyMissing
+            ? "Add your Google AI Studio key to start generating."
+            : error}
+        </p>
       </div>
-      <div>
-        <h4 className="font-bold text-rose-200 text-sm mb-1">
-          Worksheet Processing Error
-        </h4>
-        <p className="text-pitchpack-text-muted text-xs leading-relaxed mb-3">{error}</p>
-        <button
-          onClick={onClear}
-          className="text-[11px] px-3 py-1 bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 rounded border border-rose-500/30 font-mono transition-all cursor-pointer"
-        >
-          Reset Workshop
-        </button>
+
+      <div className="flex items-center gap-3 text-xs">
+        {apiKeyMissing && onOpenApiKey ? (
+          <button
+            onClick={onOpenApiKey}
+            className="flex items-center gap-1.5 text-text-muted hover:text-text underline underline-offset-2 decoration-zinc-400 transition-colors cursor-pointer"
+          >
+            <Key className="w-3.5 h-3.5" />
+            Add API Key
+          </button>
+        ) : (
+          <button
+            onClick={onClear}
+            className="text-text-muted hover:text-text underline underline-offset-2 decoration-zinc-400 transition-colors cursor-pointer"
+          >
+            Dismiss
+          </button>
+        )}
       </div>
     </div>
   );

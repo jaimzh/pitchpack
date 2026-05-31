@@ -122,6 +122,7 @@ export default function Home() {
             isGenerating={store.isGenerating}
             error={store.error}
             onErrorClear={() => store.setError(null)}
+            onOpenApiKey={() => store.setIsApiKeyOpen(true)}
           />
         )}
       </main>
