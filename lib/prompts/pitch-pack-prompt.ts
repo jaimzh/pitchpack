@@ -10,22 +10,19 @@ CRITICAL RULES:
 const EMAIL_EXAMPLES = `
 
 EXAMPLE GOOD EMAIL:
-Subject:[{brand}] x [{creator}] // for this example we are using "Converse" as the brand and "Jaimz Art" as the creator.
-Body:  Hi,
+Subject:[{brand}] x [{creator}] e.g Converse x Jaimz Art
+Body:  Hi Team Converse,
 
 I'm Jaimz (Jaimz Art), a 2D animator and digital artist with 1.8M+ followers on TikTok and 80K+ subscribers on YouTube.
 
 TikTok: @jaimz.art
 YouTube: youtube.com/c/jaimz.art
 
-I'm reaching out because Converse is already a recurring part of my character's design and content, so I thought there could be an opportunity for a natural collaboration.
+Converse has already been a part of my character's design for a while, so I thought I'd reach out to see if there might be an opportunity to work together.
 
-I create short-form animated content that regularly reaches hundreds of thousands to millions of views, and I'd love to explore creating something fun and authentic around the brand.
-
-If that's something you'd be interested in discussing, I'd be happy to share ideas.
+If that sounds interesting, I'd be happy to share some ideas.
 
 Thanks,
-
 Jaimz
 
 `;
