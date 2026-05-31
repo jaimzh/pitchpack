@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { BookmarksIcon, X, Trash, ArrowRight } from "@phosphor-icons/react";
 import { OutreachPackResponse } from "@/types";
 import { Button } from "@/components/ui/button";
@@ -27,13 +27,22 @@ export function SavedPacksModal({
   onLoadPack,
   onDeletePack,
 }: SavedPacksModalProps) {
-  if (!isOpen) return null;
+  useEffect(() => {
+  if (!isOpen) return;
+
+  const originalOverflow = document.body.style.overflow;
+  document.body.style.overflow = "hidden";
+
+  return () => {
+    document.body.style.overflow = originalOverflow;
+  };
+}, [isOpen]);
+
+if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-      <div
-        className="w-full max-w-lg rounded-2xl border border-border bg-pitchpack-bg p-6 shadow-2xl text-text transition-colors duration-300"
-      >
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs" onClick={onClose}>
+      <div className="w-full max-w-lg rounded-2xl border border-pitchpack-border bg-pitchpack-bg p-6 shadow-2xl text-pitchpack-text transition-all duration-300" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
         <div className="flex justify-between items-center mb-5 pb-3 border-b border-dashed border-border">
           <div className="flex items-center gap-2">

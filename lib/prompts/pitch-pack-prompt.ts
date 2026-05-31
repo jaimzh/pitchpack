@@ -8,12 +8,26 @@ CRITICAL RULES:
 `;
 
 const EMAIL_EXAMPLES = `
-// You can add email examples here. For instance:
-//
-// EXAMPLE GOOD EMAIL:
-// Subject: Quick question about [Brand Name] Q3 campaigns
-// Hey [Name],
-// Loved your recent campaign with [Creator]. I noticed you're pushing heavily into [Angle]...
+
+EXAMPLE GOOD EMAIL:
+Subject:[{brand}] x [{creator}] // for this example we are using "Converse" as the brand and "Jaimz Art" as the creator.
+Body:  Hi,
+
+I'm Jaimz (Jaimz Art), a 2D animator and digital artist with 1.8M+ followers on TikTok and 80K+ subscribers on YouTube.
+
+TikTok: @jaimz.art
+YouTube: youtube.com/c/jaimz.art
+
+I'm reaching out because Converse is already a recurring part of my character's design and content, so I thought there could be an opportunity for a natural collaboration.
+
+I create short-form animated content that regularly reaches hundreds of thousands to millions of views, and I'd love to explore creating something fun and authentic around the brand.
+
+If that's something you'd be interested in discussing, I'd be happy to share ideas.
+
+Thanks,
+
+Jaimz
+
 `;
 
 function formatProfile(profile: CreatorProfile): string {

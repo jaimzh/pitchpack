@@ -38,9 +38,7 @@ export default function Home() {
           />
           <div>
             <span className="font-bold tracking-tight text-xl">PitchPack</span>
-            <span className="ml-2 text-xs font-semibold px-2 py-0.5 rounded-full bg-bg-dark text-text-muted">
-              v0.1.0
-            </span>
+            
           </div>
         </div>
 
@@ -99,7 +97,7 @@ export default function Home() {
           </button>
         </div>
 
-        {/* DraftPitch / ViewPack nav switch */}
+ 
         <MainTabNav
           activeTab={store.mainTab}
           onTabChange={store.setMainTab}
@@ -131,7 +129,7 @@ export default function Home() {
       <footer className="w-full flex justify-between  max-w-4xl px-6 py-8 border-t border-text-muted/10 text-center text-xs text-text-muted">
         <span>PitchPack © 2026</span>
         <span></span>
-        <span>made by Jaimz🦖</span>
+        <span>Made by Jaimz🦖</span>
       </footer>
 
       <CreatorProfileModal
