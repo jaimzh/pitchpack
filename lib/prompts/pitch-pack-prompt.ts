@@ -10,7 +10,7 @@ CRITICAL RULES:
 const EMAIL_EXAMPLES = `
 
 EXAMPLE GOOD EMAIL:
-Subject:[{brand}] x [{creator}] e.g Converse x Jaimz Art
+Subject: [Converse] x [Jaimz Art]
 Body:  Hi Team Converse,
 
 I'm Jaimz (Jaimz Art), a 2D animator and digital artist with 1.8M+ followers on TikTok and 80K+ subscribers on YouTube.
@@ -21,6 +21,25 @@ YouTube: youtube.com/c/jaimz.art
 Converse has already been a part of my character's design for a while, so I thought I'd reach out to see if there might be an opportunity to work together.
 
 If that sounds interesting, I'd be happy to share some ideas.
+
+Thanks,
+Jaimz
+
+
+EXAMPLE GOOD EMAIL:
+Subject: [Block Blast] x [Jaimz Art]
+Body:  Hi Team Block Blast,
+
+I'm Jaimz (Jaimz Art), a 2D animator and digital artist with over 1.8M followers on TikTok and 80K subscribers on YouTube.
+
+TikTok: @jaimz.art
+YouTube: youtube.com/c/jaimz.art
+
+I'm reaching out because I'm a genuine fan of Block Blast and play it pretty regularly.
+
+I think there are some fun ways to incorporate the game into my animated content that would feel natural and entertaining for my audience rather than just feeling like an ad.
+
+If you'd be interested in exploring a collaboration, I'd be happy to share a few ideas.
 
 Thanks,
 Jaimz
