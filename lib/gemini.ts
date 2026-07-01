@@ -13,7 +13,7 @@ export async function generateFullPack(
 
   const prompt = buildPitchPackPrompt(profile, brand);
 
-  console.log("\n================ AI INPUT ================\n" + prompt + "\n==========================================\n");
+
 
   const response = await ai.models.generateContent({
     model: MODEL,
@@ -26,7 +26,7 @@ export async function generateFullPack(
   });
 
   const raw = response.text ?? "";
-  console.log("\n================ AI OUTPUT ================\n" + raw + "\n==========================================\n");
+
   
   const cleaned = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
   return JSON.parse(cleaned) as OutreachPackResponse;

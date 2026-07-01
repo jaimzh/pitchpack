@@ -30,16 +30,10 @@ export function DmsTab({
       <div className={composerCardClass}>
         {/* Header */}
         <div className={headerSectionClass}>
-          <div className="flex items-center gap-2.5 group">
-            <span className="text-[10px] bg-pitchpack-card-subtle text-pitchpack-text-muted px-2 py-0.5 rounded-md font-mono font-bold border border-pitchpack-border">
-              STEP 3
-            </span>
+          <div className="flex items-center gap-2.5">
             <h3 className="text-sm font-bold text-pitchpack-text">
               Direct Message Pitch
             </h3>
-            <span className="text-[10px] text-pitchpack-text-light opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-              A casual pitch for Instagram, Twitter, or LinkedIn DMs.
-            </span>
           </div>
 
         </div>
@@ -84,16 +78,10 @@ export function DmsTab({
       <div className={composerCardClass}>
         {/* Header */}
         <div className={headerSectionClass}>
-          <div className="flex items-center gap-2.5 group">
-            <span className="text-[10px] bg-pitchpack-card-subtle text-pitchpack-text-muted px-2 py-0.5 rounded-md font-mono font-bold border border-pitchpack-border">
-              STEP 4
-            </span>
+          <div className="flex items-center gap-2.5">
             <h3 className="text-sm font-bold text-pitchpack-text">
               Zero-Budget Reply
             </h3>
-            <span className="text-[10px] text-pitchpack-text-light opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-              Fallback response for unpaid/gifted collaborations.
-            </span>
           </div>
 
         </div>

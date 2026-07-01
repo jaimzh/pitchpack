@@ -42,16 +42,10 @@ export function EmailsTab({
       <div className={composerCardClass}>
         {/* Header */}
         <div className={headerSectionClass}>
-          <div className="flex items-center gap-2.5 group">
-            <span className="text-[10px] bg-pitchpack-card-subtle text-pitchpack-text-muted px-2 py-0.5 rounded-md font-mono font-bold border border-pitchpack-border">
-              STEP 1
-            </span>
+          <div className="flex items-center gap-2.5">
             <h3 className="text-sm font-bold text-pitchpack-text">
               Initial Pitch Email
             </h3>
-            <span className="text-[10px] text-pitchpack-text-light opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-              The first outreach to spark their interest.
-            </span>
           </div>
 
         </div>
@@ -210,16 +204,10 @@ export function EmailsTab({
       <div className={composerCardClass}>
         {/* Header */}
         <div className={headerSectionClass}>
-          <div className="flex items-center gap-2.5 group">
-            <span className="text-[10px] bg-pitchpack-card-subtle text-pitchpack-text-muted px-2 py-0.5 rounded-md font-mono font-bold border border-pitchpack-border">
-              STEP 2
-            </span>
+          <div className="flex items-center gap-2.5">
             <h3 className="text-sm font-bold text-pitchpack-text">
               Follow-Up Email
             </h3>
-            <span className="text-[10px] text-pitchpack-text-light opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-              Send this 3-5 days after your initial pitch.
-            </span>
           </div>
 
         </div>

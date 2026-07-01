@@ -127,13 +127,7 @@ export const usePitchPackStore = create<PitchPackState>((set, get) => ({
 
     set({ isGenerating: true, mainTab: "pitchpack", error: null, result: null });
 
-    console.log("[PitchPack] 🚀 Sending generate request", {
-      brand: brand.brand_name,
-      hasByokKey: Boolean(apiKey),
-      byokKeyPrefix: apiKey?.slice(0, 8) ?? "(none — using server key)",
-      creatorName: profile.creatorName,
-      timestamp: new Date().toISOString(),
-    });
+
 
     try {
       const res = await fetch("/api/generate", {
@@ -145,15 +139,11 @@ export const usePitchPackStore = create<PitchPackState>((set, get) => ({
         body: JSON.stringify({ creator: profile, brand }),
       });
 
-      console.log("[PitchPack] 📡 Response received", {
-        status: res.status,
-        statusText: res.statusText,
-        ok: res.ok,
-      });
+
 
       if (res.status === 429) {
         const errMsg = "Google Gemini API quota exceeded (Rate Limit reached). Add your own Google AI Studio key via the badge in the header to unlock unlimited generations.";
-        console.warn("[PitchPack] ⚠️ 429 Rate limit hit");
+
         set({ error: errMsg, isGenerating: false });
         return;
       }
@@ -166,11 +156,11 @@ export const usePitchPackStore = create<PitchPackState>((set, get) => ({
         } catch {
           try {
             const rawText = await res.text();
-            console.error("[PitchPack] ❌ Non-JSON error body:", rawText.slice(0, 500));
+
             if (rawText.trim()) errMsg = rawText.slice(0, 300);
           } catch { /* ignore */ }
         }
-        console.error("[PitchPack] ❌ Non-OK response", { status: res.status, errMsg });
+
         if (
           errMsg.includes("429") ||
           errMsg.toLowerCase().includes("quota") ||
@@ -187,10 +177,7 @@ export const usePitchPackStore = create<PitchPackState>((set, get) => ({
       }
 
       const data: OutreachPackResponse = await res.json();
-      console.log("[PitchPack] ✅ Generation success", {
-        hasBrandSnapshot: Boolean(data.brand_snapshot),
-        sections: data.outreach_pack ? Object.keys(data.outreach_pack) : [],
-      });
+
       set({ result: data });
 
 
